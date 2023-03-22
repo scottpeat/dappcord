@@ -16,6 +16,19 @@ async function main() {
   await dappcord.deployed();
 
   console.log(`Deployed Dappcord Contract at: ${dappcord.address}\n`);
+
+  const CHANNEL_NAMES = ['general', 'intro', 'jobs'];
+  const COSTS = [tokens(1), tokens(0), tokens(0.25)];
+
+  // Create 3 channels
+  for (let i = 0; i < 3; i++) {
+    const transaction = await dappcord
+      .connect(deployer)
+      .createChannel(CHANNEL_NAMES[i], COSTS[i]);
+    await transaction.wait();
+
+    console.log(`Created text channel #${CHANNEL_NAMES[i]}`);
+  }
 }
 
 main().catch((error) => {
