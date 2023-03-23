@@ -5,7 +5,7 @@ const tokens = (n) => {
 };
 
 async function main() {
-  // Set up accounts & variables
+  // Setup accounts & variables
   const [deployer] = await ethers.getSigners();
   const NAME = 'Dappcord';
   const SYMBOL = 'DC';
@@ -17,11 +17,11 @@ async function main() {
 
   console.log(`Deployed Dappcord Contract at: ${dappcord.address}\n`);
 
+  // Create 3 Channels
   const CHANNEL_NAMES = ['general', 'intro', 'jobs'];
   const COSTS = [tokens(1), tokens(0), tokens(0.25)];
 
-  // Create 3 channels
-  for (let i = 0; i < 3; i++) {
+  for (var i = 0; i < 3; i++) {
     const transaction = await dappcord
       .connect(deployer)
       .createChannel(CHANNEL_NAMES[i], COSTS[i]);

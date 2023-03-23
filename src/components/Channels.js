@@ -1,10 +1,41 @@
-const Channels = ({ provider, account, dappcord, channels, currentChannel, setCurrentChannel }) => {
+const Channels = ({
+  provider,
+  account,
+  dappcord,
+  channels,
+  currentChannel,
+  setCurrentChannel,
+}) => {
+  const channelHandler = async (channel) => {
+    // Check if user has joined
+    // If they haven't allow them to mint.
+    const hasJoined = await dappcord.hasJoined(channel.id, account);
+    console.log(hasJoined);
+
+    if (hasJoined) {
+      setCurrentChannel(channel);
+    } else {
+      const signer = await provider.getSigner();
+      console.log(signer);
+      const transaction = await dappcord
+        .connect(signer)
+        .mint(channel.id, { value: channel.cost });
+      await transaction.wait();
+      setCurrentChannel(channel);
+    }
+  };
 
   return (
     <div className="channels">
       <div className="channels__text">
         <h2>Text Channels</h2>
-
+        <ul>
+          {channels.map((channel, index) => (
+            <li key={index} onClick={() => channelHandler(channel)}>
+              {channel.name}
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div className="channels__voice">
@@ -18,6 +49,6 @@ const Channels = ({ provider, account, dappcord, channels, currentChannel, setCu
       </div>
     </div>
   );
-}
+};
 
 export default Channels;
