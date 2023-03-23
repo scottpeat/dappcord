@@ -32,7 +32,11 @@ function App() {
     <div>
       <Navigation account={account} setAccount={setAccount} />
 
-      <main></main>
+      <main>
+        <Servers />
+        <Channels />
+        <Messages />
+      </main>
     </div>
   );
 }
