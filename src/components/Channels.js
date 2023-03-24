@@ -31,7 +31,16 @@ const Channels = ({
         <h2>Text Channels</h2>
         <ul>
           {channels.map((channel, index) => (
-            <li key={index} onClick={() => channelHandler(channel)}>
+            <li
+              onClick={() => channelHandler(channel)}
+              key={index}
+              className={
+                currentChannel &&
+                currentChannel.id.toString() === channel.id.toString()
+                  ? 'active'
+                  : ''
+              }
+            >
               {channel.name}
             </li>
           ))}
