@@ -9,6 +9,36 @@ import send from '../assets/send.svg';
 const socket = io('ws://localhost:3030');
 
 const Messages = ({ account, messages, currentChannel }) => {
+  const [message, setMessage] = useState('');
+
+  const messageEndRef = useRef(null);
+
+  const sendMessage = async (e) => {
+    e.preventDefault();
+
+    const messageObj = {
+      channel: currentChannel.id.toString(),
+      account: account,
+      text: message,
+    };
+
+    if (message !== '') {
+      socket.emit('new message', messageObj);
+    }
+
+    setMessage('');
+  };
+
+  const scrollHandler = () => {
+    setTimeout(() => {
+      messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }, 500);
+  };
+
+  useEffect(() => {
+    scrollHandler();
+  });
+
   return (
     <div className="text">
       <div className="messages">
@@ -30,7 +60,31 @@ const Messages = ({ account, messages, currentChannel }) => {
                 </div>
               </div>
             ))}
+
+        <div ref={messageEndRef} />
       </div>
+
+      <form onSubmit={sendMessage}>
+        {currentChannel && account ? (
+          <input
+            type="text"
+            value={message}
+            placeholder={`Message #${currentChannel.name}`}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+        ) : (
+          <input
+            type="text"
+            value=""
+            placeholder={`Please Connect Wallet / Join the Channel`}
+            disabled
+          />
+        )}
+
+        <button type="submit">
+          <img src={send} alt="Send Message" />
+        </button>
+      </form>
     </div>
   );
 };
